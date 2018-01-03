@@ -1,8 +1,11 @@
 package com.jmessagedemo;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.facebook.react.ReactApplication;
+import cn.jpush.im.android.api.JMessageClient;
+import io.jchat.android.JMessageReactPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -19,10 +22,14 @@ public class MainApplication extends Application implements ReactApplication {
       return BuildConfig.DEBUG;
     }
 
+    // 如果设置为 true，则不弹出 toast。
+    private boolean shutdownToast = false;
+
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage()
+          new MainReactPackage(),
+            new JMessageReactPackage(shutdownToast)
       );
     }
 
@@ -41,5 +48,8 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+    Log.i("MainApplication", "Init JMessageClient");
+    JMessageClient.setDebugMode(true);
+    JMessageClient.init(getApplicationContext());
   }
 }
